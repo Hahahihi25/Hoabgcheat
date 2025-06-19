@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Menu Free - HoàngCheatv1</title>
+  <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;}
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      background: black;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #loginBox {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, #1a001f, #000000);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-icon img {
+      width: 70px;
+      height: 70px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 10px violet);
+      animation: pulse 2s infinite;
+    }
+
+    .login-title {
+      color: #bb66ff;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    #loginBox input {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 300px;
+      font-size: 16px;
+      background: #2a0035;
+      color: white;
+      margin-bottom: 12px;
+      outline: none;
+      box-shadow: 0 0 10px #8000ff;
+    }
+
+    #loginBox button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(45deg, #9d00ff, #ff00e0);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px #cc33ff;
+      transition: 0.3s;
+    }
+
+    #loginBox button:hover { transform: scale(1.05); }
+
+    #errorText {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+      height: 18px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .menu {
+      background: rgba(0,0,0,0.8);
+      border-radius: 20px;
+      padding: 25px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .menu::before {
+      content: "";
+      position: absolute;
+      top: -5px; left: -5px; right: -5px; bottom: -5px;
+      border-radius: 25px;
+      background: transparent;
+      box-shadow: 0 0 15px #8000ff, 0 0 30px #cc33ff;
+      animation: borderGlow 2s infinite ease-in-out;
+      z-index: -1;
+    }
+
+    @keyframes borderGlow {
+      0% { box-shadow: 0 0 10px #8000ff, 0 0 20px #cc33ff; }
+      50% { box-shadow: 0 0 25px #ff00ff, 0 0 50px #8000ff; }
+      100% { box-shadow: 0 0 10px #8000ff, 0 0 20px #cc33ff; }
+    }
+
+    .logo {
+      margin-bottom: 5px;
+      animation: spin 5s linear infinite;
+    }
+
+    .logo img {
+      width: 60px;
+      height: 60px;
+      filter: drop-shadow(0 0 5px cyan);
+    }
+
+    .author {
+      font-size: 18px;
+      font-weight: bold;
+      color: #00ffff;
+      margin-bottom: 5px;
+    }
+
+    #welcomeText {
+      color: #00ffcc;
+      margin-bottom: 15px;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(45deg, #7f00ff, #e100ff);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      background-image: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.15), transparent);
+    }
+
+    button:active { transform: scale(0.97); }
+
+    button.active {
+      animation: rainbow 4s linear infinite, pulse 2s infinite;
+      background-size: 300% 300%;
+    }
+
+    .icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loginBox">
+    <div class="login-icon">
+      <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" />
+    </div>
+    <div class="login-title">Nhập KEY để truy cập menu:</div>
+    <input id="keyInput" placeholder="Nhập KEY..." />
+    <button onclick="checkKey()">✅ Đăng Nhập</button>
+    <div id="errorText"></div>
+  </div>
+
+  <div class="logo">
+    <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="Gear">
+  </div>
+
+  <div class="author">PhamVhHoang</div>
+  <div id="welcomeText"></div>
+
+  <div class="menu">
+    <h2>🔥 MENU CHEAT</h2>
+
+    <button id="dns_btn" onclick="toggleButton('dns_btn')" class="icon-btn">
+      <lord-icon src="https://cdn.lordicon.com/nmguxqka.json" trigger="hover" style="width:25px;height:25px"></lord-icon>
+      DNS Tối Ưu Thiết Bị
+    </button>
+
+    <button id="tam_btn" onclick="toggleButton('tam_btn')" class="icon-btn">
+      <lord-icon src="https://cdn.lordicon.com/lzgqzxrq.json" trigger="hover" style="width:25px;height:25px"></lord-icon>
+      Nhẹ Tâm
+    </button>
+
+    <button id="lag_btn" onclick="toggleButton('lag_btn')" class="icon-btn">
+      <lord-icon src="https://cdn.lordicon.com/fatyzmpd.json" trigger="hover" style="width:25px;height:25px"></lord-icon>
+      FIX LAG FPS
+    </button>
+
+    <button id="hz_btn" onclick="toggleButton('hz_btn')" class="icon-btn">
+      <lord-icon src="https://cdn.lordicon.com/rivoakkk.json" trigger="hover" style="width:25px;height:25px"></lord-icon>
+      BUFF 120HZ
+    </button>
+
+    <button onclick="logout()" style="background: crimson;">🚪 Đăng Xuất</button>
+  </div>
+
+  <script>
+    const CORRECT_KEY = "phamvhpro123";
+
+    function playBeep() {
+      const sound = document.getElementById("beepSound");
+      if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => {});
+      }
+    }
+
+    function checkKey() {
+      const input = document.getElementById("keyInput").value.trim();
+      const errorText = document.getElementById("errorText");
+
+      if (input === CORRECT_KEY) {
+        localStorage.setItem("savedKey", input);
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("welcomeText").textContent = "👋 Xin chào, HoàngCheatv1!";
+        playBeep?.();
+
+        // Thông báo chào mừng
+        Swal.fire({
+          title: "👋 Xin chào!",
+          text: "Chào mừng bạn đến với Menu HoàngCheatv1!",
+          icon: "success",
+          confirmButtonText: "OK",
+          background: "#1a001f",
+          color: "#ffffff",
+          confirmButtonColor: "#bb66ff"
+        });
+      } else {
+        errorText.textContent = "❌ KEY không đúng!";
+      }
+    }
+
+    function toggleButton(id) {
+      playBeep();
+      const btn = document.getElementById(id);
+      const isActive = btn.classList.toggle("active");
+      btn.innerHTML = btn.innerHTML.replace(/: ON|: OFF|$/, '') + (isActive ? ": ON" : ": OFF");
+      localStorage.setItem("btn_" + id, isActive);
+    }
+
+    function logout() {
+      localStorage.removeItem("savedKey");
+      document.getElementById("loginBox").style.display = "flex";
+      document.getElementById("welcomeText").textContent = "";
+    }
+
+    window.onload = () => {
+      const savedKey = localStorage.getItem("savedKey");
+      if (savedKey === CORRECT_KEY) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("welcomeText").textContent = "👋 Xin chào, HoàngCheatv1!";
+      } else {
+        document.getElementById("keyInput").focus();
+      }
+
+      ["dns_btn", "tam_btn", "lag_btn", "hz_btn"].forEach(id => {
+        const isActive = localStorage.getItem("btn_" + id) === "true";
+        if (isActive) {
+          const btn = document.getElementById(id);
+          btn.classList.add("active");
+          btn.innerHTML = btn.innerHTML.replace(/: ON|: OFF|$/, '') + ": ON";
+        }
+      });
+    };
+
+    document.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("mousemove", e => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        btn.style.setProperty('--x', `${x}px`);
+        btn.style.setProperty('--y', `${y}px`);
+      });
+    });
+  </script>
+
+  <audio id="beepSound" preload="auto">
+    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.mp3" type="audio/mpeg">
+  </audio>
+
+</body>
+</html>
